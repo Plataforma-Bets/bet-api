@@ -1,6 +1,5 @@
 <?php
 
-// Modelo: app/Models/Campeonato.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,5 +16,10 @@ class Campeonato extends Model
     public function times()
     {
         return $this->belongsToMany(Time::class);
+    }
+
+    public function partidas()
+    {
+        return $this->hasMany(Partida::class);
     }
 }

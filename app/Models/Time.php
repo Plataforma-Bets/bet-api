@@ -10,7 +10,9 @@ class Time extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nome', 'liga', 'escudo'
+        'nome',
+        'liga', 
+        'escudo'
     ];
 
     public function estadio()
@@ -36,5 +38,15 @@ class Time extends Model
     public function comentarios()
     {
         return $this->hasMany(Comentario::class);
+    }
+
+    public function partidasMandante()
+    {
+        return $this->hasMany(Partida::class, 'time_mandante_id');
+    }
+
+    public function partidasVisitante()
+    {
+        return $this->hasMany(Partida::class, 'time_visitante_id');
     }
 }

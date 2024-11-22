@@ -514,9 +514,19 @@ class ComposerStaticInit589cc0f65c3aaa7d4e9024d545bc1974
     );
 
     public static $classMap = array (
+        'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
+        'App\\Models\\Campeonato' => __DIR__ . '/../..' . '/app/Models/Campeonato.php',
+        'App\\Models\\Comentario' => __DIR__ . '/../..' . '/app/Models/Comentario.php',
+        'App\\Models\\Estadio' => __DIR__ . '/../..' . '/app/Models/Estadio.php',
+        'App\\Models\\Jogador' => __DIR__ . '/../..' . '/app/Models/Jogador.php',
+        'App\\Models\\Tecnico' => __DIR__ . '/../..' . '/app/Models/Tecnico.php',
+        'App\\Models\\Time' => __DIR__ . '/../..' . '/app/Models/Time.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
+        'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
+        'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
         'Brick\\Math\\BigInteger' => __DIR__ . '/..' . '/brick/math/src/BigInteger.php',

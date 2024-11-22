@@ -6,9 +6,19 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Http\\Controllers\\AuthController' => $baseDir . '/app/Http/Controllers/AuthController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
+    'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
+    'App\\Models\\Campeonato' => $baseDir . '/app/Models/Campeonato.php',
+    'App\\Models\\Comentario' => $baseDir . '/app/Models/Comentario.php',
+    'App\\Models\\Estadio' => $baseDir . '/app/Models/Estadio.php',
+    'App\\Models\\Jogador' => $baseDir . '/app/Models/Jogador.php',
+    'App\\Models\\Tecnico' => $baseDir . '/app/Models/Tecnico.php',
+    'App\\Models\\Time' => $baseDir . '/app/Models/Time.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
+    'App\\Providers\\AuthServiceProvider' => $baseDir . '/app/Providers/AuthServiceProvider.php',
+    'App\\Providers\\RouteServiceProvider' => $baseDir . '/app/Providers/RouteServiceProvider.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Brick\\Math\\BigDecimal' => $vendorDir . '/brick/math/src/BigDecimal.php',
     'Brick\\Math\\BigInteger' => $vendorDir . '/brick/math/src/BigInteger.php',
