@@ -9,7 +9,8 @@ use App\Models\Campeonato;
 
 class PartidaController extends Controller
 {
-    public function store(Request $request)
+    //Função do Web-Scraping para salvar as partidas de um campeonato
+    public function salvarPartidas(Request $request)
     {
         \Log::info('Dados recebidos na requisição:', $request->all());
 
@@ -61,5 +62,61 @@ class PartidaController extends Controller
             \Log::error('Erro ao salvar partidas:', ['message' => $e->getMessage()]);
             return response()->json(['message' => 'Erro ao salvar partidas.'], 500);
         }
+    }
+
+    public function buscarPartidas(Request $request)
+    {
+        $request->validate([
+            'liga' => 'required|string', 
+            'tipo' => 'nullable|string' 
+        ]);
+
+        $campeonato = Campeonato::where('nome', $request->liga)->first();
+
+        if (!$campeonato) {
+            return response()->json(['message' => 'Campeonato não encontrado para a liga especificada.'], 404);
+        }
+
+        $query = Partida::where('campeonato_id', $campeonato->id);
+
+        if ($request->filled('tipo')) {
+            $query->where('tipo', $request->tipo);
+        }
+
+        $partidas = $query->with([
+            'timeMandante:id,nome,escudo',
+            'timeVisitante:id,nome,escudo',
+            'campeonato:id,nome'
+        ])->get();
+
+        return response()->json($partidas, 200);
+    }
+
+    public function listarPartidasPorTime(Request $request)
+    {
+        $request->validate([
+            'idTime' => 'required|integer'
+        ]);
+
+        $timeId = $request->idTime;
+
+        $time = Time::find($timeId);
+        if (!$time) {
+            return response()->json(['message' => 'Time não encontrado.'], 404);
+        }
+
+        $partidas = Partida::where('time_mandante_id', $timeId)
+            ->orWhere('time_visitante_id', $timeId)
+            ->with([
+                'timeMandante:id,nome,escudo',
+                'timeVisitante:id,nome,escudo',
+                'campeonato:id,nome'
+            ])
+            ->get();
+
+        return response()->json([
+            'time' => $time->nome,
+            'partidas' => $partidas
+        ], 200);
     }
 }
