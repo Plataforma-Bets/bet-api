@@ -54,7 +54,9 @@ import axios from 'axios';
                     date: match.querySelector(".event__time")?.innerText || "",
                     // round: match.querySelector(".event__round")?.innerText || "",
                     homeTeam: match.querySelector(".event__homeParticipant")?.innerText || "",
+                    homeTeamLogo: match.querySelector(".event__homeParticipant")?.src || "",
                     awayTeam: match.querySelector(".event__awayParticipant")?.innerText || "",
+                    awayTeamLogo: match.querySelector(".event__awayParticipant")?.src || "",
                     scoreHome: match.querySelector(".event__score--home")?.innerText || null,
                     scoreAway: match.querySelector(".event__score--away")?.innerText || null
                 }));
