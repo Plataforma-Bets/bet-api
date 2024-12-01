@@ -9,10 +9,6 @@ import axios from 'axios';
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     );
 
-        // { name: "Dominica Premier League", url: "https://www.flashscore.com/football/dominica/premier-league/fixtures/" },
-        // { name: "Rwanda National League", url: "https://www.flashscore.com/football/rwanda/national-league/fixtures/" },
-        // { name: "Tanzania Premier League", url: "https://www.flashscore.com/football/tanzania/premier-league/fixtures/" },
-
     const leagues = [
         {
             name: "Kenya Super League",
@@ -33,6 +29,11 @@ import axios from 'axios';
             name: "Fufa Big League",
             urlFixtures: "https://www.flashscore.com/football/uganda/big-league/fixtures/",
             urlResults: "https://www.flashscore.com/football/uganda/big-league/results/"
+        },
+        {
+            name: "Rwanda Premier League",
+            urlFixtures: "https://www.flashscore.com/football/rwanda/premier-league/fixtures/",
+            urlResults: "https://www.flashscore.com/football/rwanda/premier-league/results/"
         }
     ];
 
@@ -54,9 +55,7 @@ import axios from 'axios';
                     date: match.querySelector(".event__time")?.innerText || "",
                     // round: match.querySelector(".event__round")?.innerText || "",
                     homeTeam: match.querySelector(".event__homeParticipant")?.innerText || "",
-                    homeTeamLogo: match.querySelector(".event__homeParticipant")?.src || "",
                     awayTeam: match.querySelector(".event__awayParticipant")?.innerText || "",
-                    awayTeamLogo: match.querySelector(".event__awayParticipant")?.src || "",
                     scoreHome: match.querySelector(".event__score--home")?.innerText || null,
                     scoreAway: match.querySelector(".event__score--away")?.innerText || null
                 }));
@@ -68,11 +67,20 @@ import axios from 'axios';
                 matches: leagueData
             });
 
-            await axios.post("http://localhost:8000/api/salvar-partidas", {
-                league: league.name,
-                type,
-                matches: leagueData
-            }).catch(err => console.error(`Erro ao enviar os dados: ${err.response?.data?.message || err.message}`));
+            const chunkSize = 30;
+            const chunks = [];
+
+            for (let i = 0; i < leagueData.length; i += chunkSize) {
+                chunks.push(leagueData.slice(i, i + chunkSize));
+            }
+
+            for (const chunk of chunks) {
+                await axios.post("http://localhost:8000/api/salvar-partidas", {
+                    league: league.name,
+                    type,
+                    matches: chunk
+                }).catch(err => console.error(`Erro ao enviar os dados: ${err.response?.data?.message || err.message}`));
+            }
         }
     }
 

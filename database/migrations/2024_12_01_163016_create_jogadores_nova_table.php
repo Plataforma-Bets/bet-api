@@ -10,19 +10,20 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('tecnicos', function (Blueprint $table) {
+        Schema::create('jogadors', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
+            $table->string('posicao');
+            $table->integer('idade');
             $table->foreignId('time_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('tecnicos');
+        Schema::dropIfExists('jogadors');
     }
 };

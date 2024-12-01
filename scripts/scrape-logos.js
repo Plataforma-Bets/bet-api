@@ -29,6 +29,11 @@ import axios from 'axios';
             name: "Fufa Big League",
             urlFixtures: "https://www.flashscore.com/football/uganda/big-league/fixtures/",
             urlResults: "https://www.flashscore.com/football/uganda/big-league/results/"
+        },
+        {
+            name: "Rwanda Premier League",
+            urlFixtures: "https://www.flashscore.com/football/rwanda/premier-league/fixtures/",
+            urlResults: "https://www.flashscore.com/football/rwanda/premier-league/results/"
         }
     ];
 

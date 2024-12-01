@@ -11,14 +11,11 @@ class Time extends Model
 
     protected $fillable = [
         'nome',
-        'liga', 
-        'escudo'
+        'liga',
+        'escudo',
+        'estadio',   
+        'tecnico',
     ];
-
-    public function estadio()
-    {
-        return $this->hasOne(Estadio::class);
-    }
 
     public function campeonatos()
     {
@@ -28,11 +25,6 @@ class Time extends Model
     public function jogadores()
     {
         return $this->hasMany(Jogador::class);
-    }
-
-    public function tecnico()
-    {
-        return $this->hasOne(Tecnico::class);
     }
 
     public function comentarios()

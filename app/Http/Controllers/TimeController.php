@@ -39,28 +39,27 @@ class TimeController extends Controller
 
         return response()->json($times, 200);
     }
-    public function buscarTimePorId(Request $request)
+    public function buscarTimePorId($id)
     {
-        $request->validate([
-            'id' => 'required|integer'
-        ]);
+        try {
+            $time = Time::with([
+                'campeonatos',
+                'jogadores',
+                'comentarios',
+                'partidasMandante',
+                'partidasVisitante'
+            ])->find($id);
 
-        $timeId = $request->id;
+            if (!$time) {
+                return response()->json(['message' => 'Time não encontrado.'], 404);
+            }
 
-        $time = Time::with([
-            'estadio', 
-            'campeonatos', 
-            'jogadores', 
-            'tecnico',
-            'comentarios', 
-            'partidasMandante', 
-            'partidasVisitante' 
-        ])->find($timeId);
-
-        if (!$time) {
-            return response()->json(['message' => 'Time não encontrado.'], 404);
+            return response()->json($time, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro no servidor.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        return response()->json($time, 200);
     }
 }

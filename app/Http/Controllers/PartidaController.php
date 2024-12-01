@@ -12,7 +12,9 @@ class PartidaController extends Controller
     //Função do Web-Scraping para salvar as partidas de um campeonato
     public function salvarPartidas(Request $request)
     {
-        \Log::info('Dados recebidos na requisição:', $request->all());
+        set_time_limit(120);
+        
+        \Log::info('Requisição recebida:', ['dados' => $request->all()]);
 
         try {
             $data = $request->all();
@@ -23,8 +25,6 @@ class PartidaController extends Controller
             );
 
             foreach ($data['matches'] as $match) {
-                // \Log::info('Processando partida:', $match);
-                
                 $year = ($data['type'] === 'results') ? 2000 : 3000;
                 $dateParts = explode('.', $match['date']);
                 $day = trim($dateParts[0]);
@@ -41,23 +41,35 @@ class PartidaController extends Controller
                     ['liga' => $data['league']]
                 );
 
-                // \Log::info('Time mandante ID:', ['id' => $homeTeam->id]);
-                // \Log::info('Time visitante ID:', ['id' => $awayTeam->id]);
+                $existingMatch = Partida::where('data', $formattedDate)
+                    ->where('time_mandante_id', $homeTeam->id)
+                    ->where('time_visitante_id', $awayTeam->id)
+                    ->first();
 
-                Partida::create([
-                    'data' => $formattedDate,
-                    'time_mandante_id' => $homeTeam->id,
-                    'time_visitante_id' => $awayTeam->id,
-                    'placar_mandante' => $match['scoreHome'],
-                    'placar_visitante' => $match['scoreAway'],
-                    'tipo' => $data['type'], 
-                    'campeonato_id' => $campeonato->id
-                ]);
+                $isResult = $match['scoreHome'] !== '-' && $match['scoreAway'] !== '-';
+
+                if ($existingMatch) {
+                    $existingMatch->update([
+                        'placar_mandante' => $match['scoreHome'],
+                        'placar_visitante' => $match['scoreAway'],
+                        'tipo' => $isResult ? 'results' : 'fixtures',
+                    ]);
+                } else {
+                    Partida::create([
+                        'data' => $formattedDate,
+                        'time_mandante_id' => $homeTeam->id,
+                        'time_visitante_id' => $awayTeam->id,
+                        'placar_mandante' => $match['scoreHome'],
+                        'placar_visitante' => $match['scoreAway'],
+                        'tipo' => $isResult ? 'results' : 'fixtures', 
+                        'campeonato_id' => $campeonato->id
+                    ]);
+                }
             }
 
             \Log::info('Todas as partidas foram processadas com sucesso.');
 
-            return response()->json(['message' => 'Partidas salvas com sucesso!'], 200);
+            return response()->json(['message' => 'Partidas salvas ou atualizadas com sucesso!'], 200);
         } catch (\Exception $e) {
             \Log::error('Erro ao salvar partidas:', ['message' => $e->getMessage()]);
             return response()->json(['message' => 'Erro ao salvar partidas.'], 500);
@@ -67,56 +79,71 @@ class PartidaController extends Controller
     public function buscarPartidas(Request $request)
     {
         $request->validate([
-            'liga' => 'required|string', 
-            'tipo' => 'nullable|string' 
+            'id_campeonato' => 'required|integer',  
+            'tipo' => 'nullable|string'
         ]);
-
-        $campeonato = Campeonato::where('nome', $request->liga)->first();
-
+    
+        $campeonato = Campeonato::find($request->id_campeonato);
+    
         if (!$campeonato) {
-            return response()->json(['message' => 'Campeonato não encontrado para a liga especificada.'], 404);
+            return response()->json(['message' => 'Campeonato não encontrado para o ID especificado.'], 404);
         }
-
+    
         $query = Partida::where('campeonato_id', $campeonato->id);
-
+    
         if ($request->filled('tipo')) {
             $query->where('tipo', $request->tipo);
         }
-
+    
         $partidas = $query->with([
             'timeMandante:id,nome,escudo',
             'timeVisitante:id,nome,escudo',
             'campeonato:id,nome'
         ])->get();
-
+    
         return response()->json($partidas, 200);
     }
-
     public function listarPartidasPorTime(Request $request)
     {
-        $request->validate([
-            'idTime' => 'required|integer'
-        ]);
+        try {
+            $request->validate([
+                'idTime' => 'required|integer',
+                'tipo' => 'nullable|string',
+            ]);
 
-        $timeId = $request->idTime;
+            $timeId = $request->query('idTime');
+            $tipo = $request->query('tipo');
 
-        $time = Time::find($timeId);
-        if (!$time) {
-            return response()->json(['message' => 'Time não encontrado.'], 404);
+            $time = Time::find($timeId);
+
+            if (!$time) {
+                return response()->json(['message' => 'Time não encontrado.'], 404);
+            }
+
+            $query = Partida::where('time_mandante_id', $timeId)
+                ->orWhere('time_visitante_id', $timeId);
+
+            if ($tipo) {
+                $query->where('tipo', $tipo); 
+            }
+
+            $partidas = $query->orderBy('data', 'asc')
+                ->with([
+                    'timeMandante:id,nome,escudo',
+                    'timeVisitante:id,nome,escudo',
+                    'campeonato:id,nome'
+                ])
+                ->get();
+
+            return response()->json([
+                'time' => $time->nome,
+                'partidas' => $partidas
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro no servidor.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $partidas = Partida::where('time_mandante_id', $timeId)
-            ->orWhere('time_visitante_id', $timeId)
-            ->with([
-                'timeMandante:id,nome,escudo',
-                'timeVisitante:id,nome,escudo',
-                'campeonato:id,nome'
-            ])
-            ->get();
-
-        return response()->json([
-            'time' => $time->nome,
-            'partidas' => $partidas
-        ], 200);
     }
 }

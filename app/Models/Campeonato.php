@@ -10,7 +10,7 @@ class Campeonato extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nome', 'temporada'
+        'nome', 'temporada', 'pais', 'logo' 
     ];
 
     public function times()

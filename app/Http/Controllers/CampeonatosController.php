@@ -13,7 +13,7 @@ class CampeonatosController extends Controller
      */
     public function listarTodasLigas()
     {
-        $ligas = Campeonato::all(); // Recupera todas as ligas
+        $ligas = Campeonato::all(); 
         return response()->json(['ligas' => $ligas], 200);
     }
 
