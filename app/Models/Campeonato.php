@@ -10,7 +10,7 @@ class Campeonato extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nome', 'temporada', 'pais', 'logo' 
+        'nome', 'temporada', 'pais', 'logo'
     ];
 
     public function times()
@@ -21,5 +21,10 @@ class Campeonato extends Model
     public function partidas()
     {
         return $this->hasMany(Partida::class);
+    }
+
+    public function classificacoes()
+    {
+        return $this->hasMany(Classificacao::class);
     }
 }

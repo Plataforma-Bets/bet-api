@@ -10,30 +10,35 @@ import axios from 'axios';
     );
 
     const leagues = [
-        // {
-        //     name: "Kenya Super League",
-        //     urlFixtures: "https://www.flashscore.com/football/kenya/super-league/fixtures/",
-        //     urlResults: "https://www.flashscore.com/football/kenya/super-league/results/"
-        // },
-        // {
-        //     name: "Uganda Premier League",
-        //     urlFixtures: "https://www.flashscore.com/football/uganda/premier-league/fixtures/",
-        //     urlResults: "https://www.flashscore.com/football/uganda/premier-league/results/"
-        // },
-        // {
-        //     name: "Fufa Big League",
-        //     urlFixtures: "https://www.flashscore.com/football/uganda/big-league/fixtures/",
-        //     urlResults: "https://www.flashscore.com/football/uganda/big-league/results/"
-        // },
-        // {
-        //     name: "Rwanda Premier League",
-        //     urlFixtures: "https://www.flashscore.com/football/rwanda/premier-league/fixtures/",
-        //     urlResults: "https://www.flashscore.com/football/rwanda/premier-league/results/"
-        // },
+        {
+            name: "Kenya Super League",
+            urlFixtures: "https://www.flashscore.com/football/kenya/super-league/fixtures/",
+            urlResults: "https://www.flashscore.com/football/kenya/super-league/results/",
+            urlStandings: "https://www.flashscore.com/football/kenya/super-league/standings/"
+        },
+        {
+            name: "Uganda Premier League",
+            urlFixtures: "https://www.flashscore.com/football/uganda/premier-league/fixtures/",
+            urlResults: "https://www.flashscore.com/football/uganda/premier-league/results/",
+            urlStandings: "https://www.flashscore.com/football/uganda/premier-league/standings/"
+        },
+        {
+            name: "Fufa Big League",
+            urlFixtures: "https://www.flashscore.com/football/uganda/big-league/fixtures/",
+            urlResults: "https://www.flashscore.com/football/uganda/big-league/results/",
+            urlStandings: "https://www.flashscore.com/football/uganda/big-league/standings/"
+        },
+        {
+            name: "Rwanda Premier League",
+            urlFixtures: "https://www.flashscore.com/football/rwanda/premier-league/fixtures/",
+            urlResults: "https://www.flashscore.com/football/rwanda/premier-league/results/",
+            urlStandings: "https://www.flashscore.com/football/rwanda/premier-league/standings/"
+        },
         {
             name: "Malawi Super League",
             urlFixtures: "https://www.flashscore.com/football/malawi/super-league/fixtures/",
-            urlResults: "https://www.flashscore.com/football/malawi/super-league/results/"
+            urlResults: "https://www.flashscore.com/football/malawi/super-league/results/",
+            urlStandings: "https://www.flashscore.com/football/malawi/super-league/standings/"
         },
     ];
 
