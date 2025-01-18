@@ -1,27 +1,21 @@
-FROM php:8.2-fpm
+FROM php:8.1-fpm
 
-# Instalar extensões do PHP necessárias para Laravel
-RUN apt-get update && apt-get install -y \
-    zip unzip git curl libpng-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git unzip && \
+    docker-php-ext-configure gd --with-freetype --with-jpeg && \
+    docker-php-ext-install gd pdo pdo_mysql && \
+    pecl install xdebug && \
+    docker-php-ext-enable xdebug
 
-# Instalar Composer
-COPY --from=composer:2.5 /usr/bin/composer /usr/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Configurar o diretório de trabalho
-WORKDIR /var/www/html
+WORKDIR /var/www
 
-# Copiar os arquivos do projeto
 COPY . .
 
-# Instalar as dependências do Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Configurar permissões
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Expor a porta para o servidor
-EXPOSE 80
+EXPOSE 9000
 
-# Comando para rodar o servidor
-CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
+CMD ["php-fpm"]
