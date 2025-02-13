@@ -17,7 +17,6 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    
     Route::get('/ligas', [CampeonatosController::class, 'listarTodasLigas']);
     Route::get('/ligas/pais', [CampeonatosController::class, 'listarLigasPorPais']);
     
