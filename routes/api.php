@@ -7,6 +7,7 @@ use App\Http\Controllers\TimeController;
 use App\Http\Controllers\CampeonatosController;
 use App\Http\Controllers\TransferenciaController;
 use App\Http\Controllers\StandingsController;
+use Illuminate\Http\Request;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -22,6 +23,8 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::get('/times', [TimeController::class, 'buscarTimes']);
     Route::get('/times/{id}', [TimeController::class, 'buscarTimePorId']);
+    Route::get('/times', [TimeController::class, 'buscarTimesPorNome']);
+
     
     Route::get('/partidas', [PartidaController::class, 'buscarPartidas']);
     Route::get('/partidas/time', [PartidaController::class, 'listarPartidasPorTime']);

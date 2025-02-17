@@ -62,4 +62,35 @@ class TimeController extends Controller
             ], 500);
         }
     }
+    
+
+public function buscarTimePorNome(Request $request)
+{
+    try {
+        
+        $request->validate([
+            'nome' => 'required|string|min:1',
+        ]);
+
+        
+        $time = Time::with([
+            'campeonatos',
+            'jogadores',
+            'comentarios',
+            'partidasMandante',
+            'partidasVisitante'
+        ])->where('nome', 'LIKE', '%' . $request->nome . '%')->first();
+
+        
+        if (!$time) {
+            return response()->json(['message' => 'Time não encontrado.'], 404);
+        }
+
+        
+        return response()->json($time, 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Erro ao buscar o time.', 'error' => $e->getMessage()], 500);
+    }
+}
+
 }
